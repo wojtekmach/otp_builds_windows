@@ -20,7 +20,7 @@ jobs:
           distribution: Ubuntu-18.04
 
       - name: "Install WSL dependencies"
-        run: apt update && apt install -y make autoconf unzip
+        run: apt update && apt install -y make autoconf unzip curl
 
       - name: "Install OpenSSL"
         shell: cmd
@@ -28,19 +28,11 @@ jobs:
           choco install openssl --version=3.1.1
           IF EXIST "c:\\Program Files\\OpenSSL-Win64" (move "c:\\Program Files\\OpenSSL-Win64" "c:\\OpenSSL-Win64") ELSE (move "c:\\Program Files\\OpenSSL" "c:\\OpenSSL-Win64")
 
-      - name: Disable CRLF conversion
-        run: git config --global core.autocrlf false
-
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ inputs.otp-repo }}
-          ref: ${{ inputs.otp-ref-name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: "Build OTP"
         run: |
-          sed -i 's/\r$//' otp_build
-          find . -type f -name '*.sh' -exec sed -i 's/\r$//' {} +
+          curl -fsSLO https://github.com/${{ inputs.otp-repo }}/archive/refs/heads/${{ inputs.otp-ref-name }}.zip
+          unzip ${{ inputs.otp-ref-name }}
+          cd otp-${{ inputs.otp-ref-name }}
 
           export ERL_TOP=`pwd`
           export MAKEFLAGS=-j$(($(nproc) + 2))
