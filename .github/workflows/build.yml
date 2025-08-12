@@ -39,6 +39,9 @@ jobs:
 
       - name: "Build OTP"
         run: |
+          sed -i 's/\r$//' otp_build
+          find . -type f -name '*.sh' -exec sed -i 's/\r$//' {} +
+
           export ERL_TOP=`pwd`
           export MAKEFLAGS=-j$(($(nproc) + 2))
           export ERLC_USE_SERVER=true
