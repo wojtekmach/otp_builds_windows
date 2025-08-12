@@ -30,11 +30,16 @@ jobs:
 
       - name: "Build OTP"
         run: |
-          curl -fsSLO https://github.com/${{ inputs.otp-repo }}/archive/refs/heads/${{ inputs.otp-ref-name }}.zip
-          unzip ${{ inputs.otp-ref-name }}.zip
-          mv otp-${{ inputs.otp-ref-name }} otp
-          cd otp
+          # basename=${{ inputs.otp-ref-name }}
+          # url="https://github.com/${{ inputs.otp-repo }}/archive/refs/heads/$basename.zip"
+          basename="sverker-crypto-low-entropy-after-init-restart-OTP-19725"
+          url="https://github.com/sverker/otp/archive/refs/heads/sverker/crypto/low-entropy-after-init-restart/OTP-19725.zip"
 
+          curl -fsSL -o otp.zip "$url"
+          unzip otp.zip
+          mv otp-$basename otp
+
+          cd otp
           export ERL_TOP=`pwd`
           export MAKEFLAGS=-j$(($(nproc) + 2))
           export ERLC_USE_SERVER=true
