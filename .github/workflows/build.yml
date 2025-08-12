@@ -19,8 +19,8 @@ jobs:
         with:
           distribution: Ubuntu-18.04
 
-      - name: "Install WSL dependencies"
-        run: apt update && apt install -y make autoconf unzip curl
+      # - name: "Install WSL dependencies"
+      #   run: apt update && apt install -y make autoconf unzip curl
 
       - name: "Install OpenSSL"
         shell: cmd
