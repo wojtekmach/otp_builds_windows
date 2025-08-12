@@ -31,7 +31,7 @@ jobs:
       - name: "Build OTP"
         run: |
           curl -fsSLO https://github.com/${{ inputs.otp-repo }}/archive/refs/heads/${{ inputs.otp-ref-name }}.zip
-          unzip ${{ inputs.otp-ref-name }}
+          unzip ${{ inputs.otp-ref-name }}.zip
           cd otp-${{ inputs.otp-ref-name }}
 
           export ERL_TOP=`pwd`
