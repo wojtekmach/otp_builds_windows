@@ -15,10 +15,10 @@ jobs:
         shell: wsl-bash {0}
     runs-on: windows-2025
     steps:
-      - name: Install WSL dependencies
+      - name: "Install WSL dependencies"
         run: apt update && apt install -y make autoconf unzip
 
-      - name: "Install OpenSSL'
+      - name: "Install OpenSSL"
         shell: cmd
         run: |
           choco install openssl --version=3.1.1
