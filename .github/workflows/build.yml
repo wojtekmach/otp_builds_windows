@@ -17,10 +17,10 @@ jobs:
     steps:
       - uses: Vampire/setup-wsl@3b46b44374d5d0ae94654c45d114a3ed7a0e07a8 # ratchet:Vampire/setup-wsl@v5.0.1
         with:
-          distribution: Ubuntu-18.04
+          distribution: Ubuntu-20.04
 
-      # - name: "Install WSL dependencies"
-      #   run: apt update && apt install -y make autoconf unzip curl
+      - name: "Install WSL dependencies"
+        run: apt update && apt install -y make autoconf unzip curl
 
       - name: "Install OpenSSL"
         shell: cmd
