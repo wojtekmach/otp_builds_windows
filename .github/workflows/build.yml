@@ -1,0 +1,55 @@
+name: Build
+on:
+  workflow_dispatch:
+    inputs:
+      otp-repo:
+        required: true
+        default: erlang/otp
+      otp-ref-name:
+        required: true
+        default: maint
+jobs:
+  build:
+    defaults:
+      run:
+        shell: wsl-bash {0}
+    runs-on: windows-2025
+    steps:
+      - name: Install WSL dependencies
+        run: apt update && apt install -y make autoconf unzip
+
+      - name: "Install OpenSSL'
+        shell: cmd
+        run: |
+          choco install openssl --version=3.1.1
+          IF EXIST "c:\\Program Files\\OpenSSL-Win64" (move "c:\\Program Files\\OpenSSL-Win64" "c:\\OpenSSL-Win64") ELSE (move "c:\\Program Files\\OpenSSL" "c:\\OpenSSL-Win64")
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.otp-repo }}
+          ref: ${{ inputs.otp-ref-name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Build OTP"
+        run: |
+          export ERL_TOP=`pwd`
+          export MAKEFLAGS=-j$(($(nproc) + 2))
+          export ERLC_USE_SERVER=true
+          export ERTS_SKIP_DEPEND=true
+          eval `./otp_build env_win32 x64`
+          ./otp_build configure
+          if cat erts/CONF_INFO ||
+             grep -v "Static linking with OpenSSL 3.0" lib/*/CONF_INFO ||
+             cat lib/*/SKIP ||
+             cat lib/SKIP-APPLICATIONS; then
+             exit 1
+          fi
+          ./otp_build boot -a
+          ./otp_build release -a
+          ./otp_build debuginfo_win32
+          ./otp_build installer_win32
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: release/
