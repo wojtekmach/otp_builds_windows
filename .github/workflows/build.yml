@@ -55,6 +55,8 @@ jobs:
           ./otp_build release -a
           ./otp_build debuginfo_win32
           ./otp_build installer_win32
+          ls -la
+          ls -la release || true
 
       - uses: actions/upload-artifact@v4
         with:
