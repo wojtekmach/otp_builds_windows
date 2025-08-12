@@ -13,7 +13,7 @@ jobs:
     defaults:
       run:
         shell: wsl-bash {0}
-    runs-on: windows-2025
+    runs-on: windows-2022
     steps:
       - uses: Vampire/setup-wsl@3b46b44374d5d0ae94654c45d114a3ed7a0e07a8 # ratchet:Vampire/setup-wsl@v5.0.1
         with:
